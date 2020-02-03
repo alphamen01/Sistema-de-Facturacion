@@ -1,6 +1,6 @@
 package com.lesg.springboot.app;
 
-import javax.sql.DataSource;
+//import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.lesg.springboot.app.auth.handler.LoginSuccessHandler;
+import com.lesg.springboot.app.models.service.JpaUserDetailsService;
 
 @EnableGlobalMethodSecurity(securedEnabled =  true, prePostEnabled = true)
 @Configuration
@@ -23,8 +24,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private LoginSuccessHandler successHandler;
 	
-	@Autowired 
-	private DataSource dataSource;
+	/*@Autowired 
+	private DataSource dataSource;*/
+	
+	@Autowired
+	private JpaUserDetailsService userDetailsService;
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -53,12 +57,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception{
 		
-		
-		build.jdbcAuthentication()
+		build.userDetailsService(userDetailsService)
+		.passwordEncoder(passwordEncoder);
+		/* autenticacion con jdbc con forma nativa
+		 * build.jdbcAuthentication()
 		.dataSource(dataSource)
 		.passwordEncoder(passwordEncoder)
 		.usersByUsernameQuery("select username, password, enabled from users where username=?")
-		.authoritiesByUsernameQuery("select u.username, a.authority from authorities a inner join users u on (a.user_id=u.id) where u.username=?");
+		.authoritiesByUsernameQuery("select u.username, a.authority from authorities a inner join users u on (a.user_id=u.id) where u.username=?");*/
 		/*PasswordEncoder encoder= PasswordEncoderFactories.createDelegatingPasswordEncoder();
 		UserBuilder users = User.builder().passwordEncoder(encoder::encode);
 		
