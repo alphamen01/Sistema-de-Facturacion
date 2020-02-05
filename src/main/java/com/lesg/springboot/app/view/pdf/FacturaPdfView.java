@@ -18,7 +18,7 @@ import com.lowagie.text.pdf.PdfPTable;
 
 import com.lowagie.text.pdf.PdfWriter;
 
-@Component("factura/ver")
+@Component("factura/ver.pdf")
 public class FacturaPdfView extends AbstractPdfView{
 
 	@Override
